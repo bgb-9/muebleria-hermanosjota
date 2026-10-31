@@ -1,27 +1,27 @@
-function ProductCard({ producto, onSelectProduct, onAddToCart, currency }) {
-  const imageSource = producto.imagen.startsWith('/') ? producto.imagen : `/${producto.imagen}`
+import { Link } from 'react-router-dom'
+import { currency, getImageSource } from '../utils/format.js'
 
+function ProductCard({ producto, onAddToCart }) {
   return (
     <article className="product-card">
       <img
-        src={imageSource}
+        src={getImageSource(producto.imageUrl)}
         alt={producto.nombre}
         className="product-card__img"
       />
       <div className="product-card__body">
-        <p className="product-card__category">{producto.categoria}</p>
         <h3 className="product-card__title">{producto.nombre}</h3>
-        <p className="product-card__desc">{producto.descripcion}</p>
+        {producto.descripcion && (
+          <p className="product-card__desc">{producto.descripcion}</p>
+        )}
         <div className="product-card__footer">
           <p className="product-card__price">{currency.format(producto.precio)}</p>
           <div className="product-card__actions">
-            <button
-              className="btn btn--secondary"
-              onClick={() => onSelectProduct(producto)}
-            >
+            <Link to={`/productos/${producto._id}`} className="btn btn--secondary">
               Ver más
-            </button>
+            </Link>
             <button
+              type="button"
               className="btn btn--primary"
               onClick={() => onAddToCart(producto)}
             >

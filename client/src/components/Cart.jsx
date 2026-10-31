@@ -1,11 +1,6 @@
-function Cart({ open, onClose, carrito, productos, onCambiarCantidad, onEliminar, total, moneda }) {
-  const carritoConProductos = carrito
-    .map(item => ({
-      ...item,
-      producto: productos.find(p => p.id === item.id)
-    }))
-    .filter(item => item.producto)
+import { currency } from '../utils/format.js'
 
+function Cart({ open, onClose, carrito, onCambiarCantidad, onEliminar, total }) {
   return (
     <aside className={`cart-sidebar ${open ? 'cart-sidebar--open' : ''}`} aria-label="Carrito de compras">
       <div className="cart-sidebar__header">
@@ -14,35 +9,35 @@ function Cart({ open, onClose, carrito, productos, onCambiarCantidad, onEliminar
       </div>
 
       <ul className="cart-items">
-        {carritoConProductos.length === 0 ? (
+        {carrito.length === 0 ? (
           <li className="cart-empty">Tu carrito está vacío.</li>
         ) : (
-          carritoConProductos.map(({ producto, cantidad }) => (
-            <li key={producto.id} className="cart-item">
+          carrito.map((item) => (
+            <li key={item._id} className="cart-item">
               <div>
-                <strong>{producto.nombre}</strong>
-                <span>{moneda.format(producto.precio)} c/u</span>
+                <strong>{item.nombre}</strong>
+                <span>{currency.format(item.precio)} c/u</span>
               </div>
               <div className="cart-item__controls">
                 <button
                   type="button"
-                  onClick={() => onCambiarCantidad(producto.id, -1)}
-                  aria-label={`Restar ${producto.nombre}`}
+                  onClick={() => onCambiarCantidad(item._id, -1)}
+                  aria-label={`Restar ${item.nombre}`}
                 >
                   -
                 </button>
-                <span>{cantidad}</span>
+                <span>{item.cantidad}</span>
                 <button
                   type="button"
-                  onClick={() => onCambiarCantidad(producto.id, 1)}
-                  aria-label={`Sumar ${producto.nombre}`}
+                  onClick={() => onCambiarCantidad(item._id, 1)}
+                  aria-label={`Sumar ${item.nombre}`}
                 >
                   +
                 </button>
                 <button
                   type="button"
-                  onClick={() => onEliminar(producto.id)}
-                  aria-label={`Eliminar ${producto.nombre}`}
+                  onClick={() => onEliminar(item._id)}
+                  aria-label={`Eliminar ${item.nombre}`}
                 >
                   Eliminar
                 </button>
@@ -54,7 +49,7 @@ function Cart({ open, onClose, carrito, productos, onCambiarCantidad, onEliminar
 
       <div className="cart-sidebar__total">
         <span>Total</span>
-        <strong>{moneda.format(total)}</strong>
+        <strong>{currency.format(total)}</strong>
       </div>
     </aside>
   )

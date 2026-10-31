@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { getProductos } from '../api/api.js'
 import ProductCard from './ProductCard.jsx'
 
-function ProductList({ onSelectProduct, onAddToCart, currency }) {
+function ProductList({ onAddToCart }) {
   const [productos, setProductos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -12,11 +13,7 @@ function ProductList({ onSelectProduct, onAddToCart, currency }) {
       try {
         setLoading(true)
         setError('')
-        const response = await fetch('http://localhost:3000/api/productos')
-        if (!response.ok) {
-          throw new Error('No se pudieron cargar los productos.')
-        }
-        const data = await response.json()
+        const data = await getProductos()
         setProductos(data)
       } catch (fetchError) {
         setError(fetchError.message || 'No se pudieron cargar los productos.')
@@ -28,12 +25,11 @@ function ProductList({ onSelectProduct, onAddToCart, currency }) {
     loadProducts()
   }, [])
 
-  const filteredProducts = productos.filter((producto) => {
-    const normalizedSearch = searchTerm.trim().toLowerCase()
-    return !normalizedSearch
-      || producto.nombre.toLowerCase().includes(normalizedSearch)
-      || producto.categoria.toLowerCase().includes(normalizedSearch)
-  })
+  const normalizedSearch = searchTerm.trim().toLowerCase()
+  const filteredProducts = productos.filter((producto) => (
+    !normalizedSearch
+    || `${producto.nombre} ${producto.descripcion ?? ''}`.toLowerCase().includes(normalizedSearch)
+  ))
 
   return (
     <>
@@ -72,11 +68,9 @@ function ProductList({ onSelectProduct, onAddToCart, currency }) {
             <div className="catalog__grid">
               {filteredProducts.map((producto) => (
                 <ProductCard
-                  key={producto.id}
+                  key={producto._id}
                   producto={producto}
-                  onSelectProduct={onSelectProduct}
                   onAddToCart={onAddToCart}
-                  currency={currency}
                 />
               ))}
             </div>

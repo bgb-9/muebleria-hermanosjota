@@ -348,20 +348,21 @@ main {
 .cart-sidebar {
   position: fixed;
   top: 0;
-  right: -400px;
+  right: 0;
   width: 400px;
-  max-width: 90vw;
+  max-width: 100vw;
   height: 100vh;
   background: #fff;
   box-shadow: -2px 0 12px rgba(0,0,0,0.15);
-  transition: right 0.3s ease;
+  transform: translateX(110%);
+  transition: transform 0.3s ease;
   z-index: 200;
   display: flex;
   flex-direction: column;
 }
 
 .cart-sidebar--open {
-  right: 0;
+  transform: translateX(0);
 }
 
 .cart-sidebar__header {
@@ -583,6 +584,6 @@ main {
 
   .cart-sidebar {
     width: 100vw;
-    right: -100vw;
+    
   }
 }
