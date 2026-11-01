@@ -1363,3 +1363,60 @@ main {
 .btn-eliminar:hover {
   background-color: #8f1d17 !important;
 }
+/* ==========================================================================
+   Estilos para el Menú Móvil y Botón Toggle
+   ========================================================================== */
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0.5rem;
+  margin-left: auto;
+}
+
+.nav-toggle__bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-texto);
+  transition: transform 0.2s ease;
+}
+
+/* Ajustes responsivos para celulares y tablets */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: flex; /* Muestra el botón de hamburguesa en mobile */
+  }
+
+  .cart {
+    margin-left: 0; /* Ajusta la posición del carrito en mobile */
+  }
+
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid var(--color-borde);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  /* Se abre cuando haces clic en el botón */
+  .nav--open {
+    max-height: 300px; 
+  }
+
+  .nav__list {
+    flex-direction: column;
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+  }
+}
