@@ -416,14 +416,14 @@ main {
   line-height: 1.7;
 }
 
-/* Cart Sidebar */
+/* Base del carrito */
 .cart-sidebar {
   position: fixed;
   top: 0;
   right: 0;
   width: 400px;
   max-width: 100vw;
-  height: 100vh;
+  height: 100dvh; /* Usa dynamic viewport height para evitar problemas con la barra de navegación del celular */
   background: #fff;
   box-shadow: -2px 0 12px rgba(0,0,0,0.15);
   transform: translateX(110%);
@@ -659,6 +659,16 @@ main {
 
   .cart-sidebar {
     width: 100vw;
+    height: auto;
+    max-height: 85dvh; /* En mobile solo ocupa hasta el 85% de la pantalla para que el total suba si hay pocos productos */
+    bottom: 0;
+    top: auto;
+    border-radius: 16px 16px 0 0; /* Un toque moderno estilo modal inferior */
+    transform: translateY(110%);
+  }
+
+  .cart-sidebar--open {
+    transform: translateY(0);
   }
 }
 
