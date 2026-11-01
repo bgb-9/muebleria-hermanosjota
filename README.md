@@ -132,8 +132,26 @@ Para trabajar en local hay que correr el backend y el frontend a la vez, en dos 
 | `/productos` | Catálogo con buscador |
 | `/productos/:id` | Detalle de un producto (usa `useParams`) |
 | `/contacto` | Formulario de contacto |
-| `/admin/crear-producto` | Alta de producto |
-| `/admin/editar-producto/:id` | Edición de producto |
+| `/admin` | Panel de administración: listado con acciones de edición y baja |
+| `/admin/crear-producto` | Alta de producto (formulario controlado con POST) |
+| `/admin/editar-producto/:id` | Edición de producto (mismo formulario, con datos precargados y PUT) |
+
+## 🧑‍💼 Panel de administración
+
+Disponible en `http://localhost:3000/admin` (en producción, sobre la URL de Vercel). Reutiliza el mismo formulario controlado para el alta y la edición:
+
+| Acción | Ruta | Llamada a la API |
+|--------|------|------------------|
+| Listar productos | `/admin` | `GET /api/productos` |
+| Crear producto | `/admin/crear-producto` | `POST /api/productos` |
+| Editar producto | `/admin/editar-producto/:id` | `PUT /api/productos/:id` |
+| Eliminar producto | `/admin` (botón de la tabla) | `DELETE /api/productos/:id` |
+
+- **Formulario compartido:** un único componente (`ProductForm`) maneja los campos `nombre`, `descripcion`, `precio`, `stock` e `imageUrl`, con validación previa al envío (nombre y precio obligatorios, números no negativos).
+- **Alta:** al confirmar, hace `POST`, muestra el estado de guardado, informa errores de la API y navega al panel con `useNavigate` y un mensaje de éxito.
+- **Edición:** carga el producto con `GET /api/productos/:id`, precarga los campos y guarda con `PUT`. Si el id no existe o es inválido, muestra el error de la API y un enlace para volver.
+- **Baja:** el botón *Eliminar* abre un diálogo de confirmación; al aceptar hace `DELETE` y vuelve a pedir el listado, de modo que la tabla se refresca sin recargar la página.
+- **Estados:** el panel contempla carga, error (con opción de reintentar), listado vacío y avisos de éxito. Los estilos de formularios, tabla, etiquetas de stock, botones y diálogo siguen la paleta y tipografías del manual de marca.
 
 ## 🧩 Decisiones técnicas
 
@@ -154,6 +172,9 @@ Para trabajar en local hay que correr el backend y el frontend a la vez, en dos 
 - Todas las llamadas a la API pasan por un único módulo (`src/api/`), que toma la dirección de `VITE_API_URL`, de modo que el mismo código funciona en local y en producción.
 - Estado del carrito centralizado en `App.jsx` y persistido en `localStorage`, para que sobreviva a recargas; el contador del Navbar se calcula a partir del carrito.
 - Las pantallas manejan los estados de carga y de error, y el detalle contempla el caso de producto inexistente.
+- El alta y la edición comparten un mismo formulario controlado, con validación en el cliente y mensajes de error por campo; la página que lo usa resuelve el `POST` o el `PUT` y navega al panel con `useNavigate`.
+- La baja se confirma en un diálogo accesible antes del `DELETE`, y al terminar se vuelve a pedir el listado para reflejar el cambio sin recargar la página.
+- El panel de administración usa las variables de color y las tipografías del manual de marca (siena tostado, verde salvia, alabastro cálido, vara de oro y rosa polvoriento; Inter y Playfair Display).
 
 ## 👥 Integrantes del Equipo
 

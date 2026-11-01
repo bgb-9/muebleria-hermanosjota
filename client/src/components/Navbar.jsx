@@ -29,6 +29,9 @@ function Navbar({ cartCount, onCartClick }) {
             <li className="nav__item">
               <NavLink to="/contacto" className={navLinkClass} onClick={closeMenu}>Contacto</NavLink>
             </li>
+            <li className="nav__item">
+              <NavLink to="/admin" className={navLinkClass} onClick={closeMenu}>Admin</NavLink>
+            </li>
           </ul>
         </nav>
         <button type="button" className="cart" onClick={onCartClick} aria-label="Ver carrito">

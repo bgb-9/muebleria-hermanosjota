@@ -8,6 +8,7 @@ import ProductDetail from './components/ProductDetail.jsx'
 import ProductList from './components/ProductList.jsx'
 import AdminCrearProducto from './pages/AdminCrearProducto.jsx'
 import AdminEditarProducto from './pages/AdminEditarProducto.jsx'
+import AdminProductos from './pages/AdminProductos.jsx'
 import Home from './pages/Home.jsx'
 import NotFound from './pages/NotFound.jsx'
 
@@ -75,6 +76,7 @@ function App() {
           <Route path="/productos" element={<ProductList onAddToCart={addToCart} />} />
           <Route path="/productos/:id" element={<ProductDetail onAddToCart={addToCart} />} />
           <Route path="/contacto" element={<ContactForm />} />
+          <Route path="/admin" element={<AdminProductos />} />
           <Route path="/admin/crear-producto" element={<AdminCrearProducto />} />
           <Route path="/admin/editar-producto/:id" element={<AdminEditarProducto />} />
           <Route path="*" element={<NotFound />} />

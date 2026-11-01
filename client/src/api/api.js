@@ -19,5 +19,23 @@ const request = async (path, options) => {
   return response.json()
 }
 
+const jsonHeaders = { 'Content-Type': 'application/json' }
+
 export const getProductos = () => request('/api/productos')
 export const getProducto = (id) => request(`/api/productos/${id}`)
+
+export const crearProducto = (producto) => request('/api/productos', {
+  method: 'POST',
+  headers: jsonHeaders,
+  body: JSON.stringify(producto)
+})
+
+export const actualizarProducto = (id, producto) => request(`/api/productos/${id}`, {
+  method: 'PUT',
+  headers: jsonHeaders,
+  body: JSON.stringify(producto)
+})
+
+export const eliminarProducto = (id) => request(`/api/productos/${id}`, {
+  method: 'DELETE'
+})
