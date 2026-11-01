@@ -7,9 +7,10 @@ function ContactForm() {
   const [enviado, setEnviado] = useState(false)
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setEnviado(true)
-  }
+  e.preventDefault()
+  console.log('Datos del formulario de contacto:', { nombre, email, mensaje })
+  setEnviado(true)
+}
 
   if (enviado) {
     return (
