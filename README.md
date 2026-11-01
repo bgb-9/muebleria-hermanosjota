@@ -2,34 +2,34 @@
 
 ## 📖 Descripción
 
-Mueblería Hermanos Jota es una plataforma e-commerce full stack: frontend en React, backend propio con Node.js y Express, y persistencia de datos en MongoDB Atlas. El frontend consume una API REST para obtener y gestionar el catálogo de productos, simulando una experiencia de compra real con carrito y formulario de contacto.
+Mueblería Hermanos Jota es una plataforma e-commerce full stack: frontend en React, backend propio con Node.js y Express, y persistencia de datos en MongoDB Atlas. El frontend consume una API REST para obtener y gestionar el catálogo de productos, con carrito de compras, formulario de contacto y ruteo entre páginas.
+
+## 🌐 Despliegues
+
+| Parte | Plataforma | Enlace |
+|-------|------------|--------|
+| Frontend | Vercel | https://muebleria-hermanosjota-olive.vercel.app/ |
+| Backend (API) | Render | https://muebleria-hermanosjota-api.onrender.com/api/productos |
+
+> **Nota:** el backend usa el plan gratuito de Render, que se "duerme" tras 15 minutos sin uso. La primera petición después de un rato puede tardar alrededor de un minuto en responder. Si el catálogo no carga al instante, abrir el enlace de la API y esperar a que responda.
 
 ## 🛠️ Tecnologías Utilizadas
 
 **Frontend**
 
 - React (creado con Vite)
-- Componentes: Navbar, Footer, ProductCard, ProductList, ProductDetail, Cart, ContactForm
-- Hooks (`useState`, `useEffect`) para manejo de estado, formularios controlados y carga de datos
-- Consumo de API mediante `fetch`, con manejo de estados de carga y error
+- React Router DOM: rutas, rutas dinámicas con `useParams` y navegación con `NavLink`/`Link`
+- Hooks (`useState`, `useEffect`) para estado, formularios controlados y carga de datos
+- Consumo de la API con `fetch`, con manejo de estados de carga y error
 
 **Backend**
 
 - Node.js + Express
 - MongoDB Atlas con Mongoose (esquema `Product` con validaciones)
-- API REST con CRUD completo, rutas modulares con `express.Router()`
+- API REST con CRUD completo y rutas modulares con `express.Router()`
 - Variables de entorno con `dotenv`
 - Middleware de logging personalizado y middleware `cors`
 - Manejo de errores centralizado (400, 404 y errores generales)
-
-## 🌐 Despliegues
-
-| Parte | Plataforma | Enlace |
-|-------|------------|--------|
-| Backend (API) | Render | https://muebleria-hermanosjota-api.onrender.com/api/productos |
-| Frontend | Vercel / Netlify | *(completar cuando esté desplegado)* |
-
-> **Nota:** el backend usa el plan gratuito de Render, que se "duerme" tras 15 minutos sin uso. La primera petición después de un rato puede tardar alrededor de un minuto en responder.
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -42,32 +42,32 @@ Mueblería Hermanos Jota es una plataforma e-commerce full stack: frontend en Re
 React (client)  ⇄  Express API (backend)  ⇄  MongoDB Atlas
 ```
 
-Ambas partes son independientes, pero deben ejecutarse simultáneamente (en dos terminales separadas) para trabajar en local, ya que el frontend obtiene los datos mediante peticiones a la API.
+## 🚀 Instalación y ejecución en local
 
-## 🚀 Instalación y ejecución
+Para trabajar en local hay que correr el backend y el frontend a la vez, en dos terminales separadas.
 
 ### Backend (Express + MongoDB)
 
-1. Entrá a la carpeta e instalá las dependencias:
+1. Instalar dependencias:
    ```bash
    cd backend
    npm install
    ```
 
-2. Creá un archivo `.env` dentro de `backend/`, copiando `.env.example`:
+2. Crear un archivo `.env` dentro de `backend/`, copiando `.env.example`:
    ```
    PORT=3001
    MONGODB_URI=mongodb+srv://USUARIO:PASSWORD@TU_CLUSTER.mongodb.net/muebleria?retryWrites=true&w=majority
    ```
-   Reemplazá `USUARIO`, `PASSWORD` y `TU_CLUSTER` por los datos de tu base en MongoDB Atlas. El archivo `.env` está en `.gitignore` y nunca debe subirse al repositorio.
+   Reemplazar `USUARIO`, `PASSWORD` y `TU_CLUSTER` por los datos propios de MongoDB Atlas. El archivo `.env` está en `.gitignore` y nunca debe subirse al repositorio.
 
-3. (Opcional) Cargá los 11 productos iniciales en la base:
+3. (Opcional) Cargar los 11 productos iniciales en la base:
    ```bash
    npm run seed
    ```
-   Este comando vacía la colección antes de cargar, así que usalo solo para resetear los datos.
+   Este comando vacía la colección antes de cargar, así que debe usarse solo para resetear los datos.
 
-4. Iniciá el servidor en modo desarrollo:
+4. Iniciar el servidor en modo desarrollo:
    ```bash
    npm run dev
    ```
@@ -80,7 +80,39 @@ Ambas partes son independientes, pero deben ejecutarse simultáneamente (en dos 
 | `MONGODB_URI` | Cadena de conexión a MongoDB Atlas (obligatoria) |
 | `PORT` | Puerto del servidor (opcional, por defecto 3001; Render lo define solo) |
 
-**Endpoints disponibles**
+### Frontend (React + Vite)
+
+1. Instalar dependencias:
+   ```bash
+   cd client
+   npm install
+   ```
+
+2. Crear un archivo `.env` dentro de `client/`, copiando `.env.example`:
+   ```
+   VITE_API_URL=http://localhost:3001
+   ```
+
+3. Iniciar la aplicación:
+   ```bash
+   npm run dev
+   ```
+   Queda disponible en `http://localhost:3000`.
+
+**Variables de entorno del frontend**
+
+| Variable | Descripción |
+|----------|-------------|
+| `VITE_API_URL` | Dirección base del backend, sin barra final ni `/api/productos`. En local: `http://localhost:3001`. En producción: la URL de Render. |
+
+> Las variables de Vite se incorporan al construir el sitio: si se cambian en Vercel, hay que volver a desplegar para que tomen efecto. En local, hay que reiniciar `npm run dev` después de editar el `.env`.
+
+## ☁️ Despliegue
+
+- **Backend en Render:** servicio web con *Root Directory* `backend`, comando de build `npm install` y de inicio `npm start`. Se carga la variable `MONGODB_URI` en el panel de Render. En MongoDB Atlas, el acceso de red permite conexiones desde cualquier IP (`0.0.0.0/0`) para que Render pueda conectarse.
+- **Frontend en Vercel:** proyecto con *Root Directory* `client` y preset Vite. Se carga la variable `VITE_API_URL` con la URL del backend. El archivo `client/vercel.json` redirige todas las rutas a `index.html`, para que recargar en una ruta como `/productos/:id` no devuelva 404.
+
+## 🔌 API REST
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -92,41 +124,36 @@ Ambas partes son independientes, pero deben ejecutarse simultáneamente (en dos 
 
 **Modelo `Product`:** `nombre` (String, requerido), `descripcion` (String), `precio` (Number, requerido), `stock` (Number), `imageUrl` (String).
 
-### Frontend (React)
+## 🧭 Rutas del Frontend
 
-```bash
-cd client
-npm install
-npm run dev
-```
-
-La aplicación queda disponible en `http://localhost:3000`.
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Inicio, con productos destacados |
+| `/productos` | Catálogo con buscador |
+| `/productos/:id` | Detalle de un producto (usa `useParams`) |
+| `/contacto` | Formulario de contacto |
+| `/admin/crear-producto` | Alta de producto |
+| `/admin/editar-producto/:id` | Edición de producto |
 
 ## 🧩 Decisiones técnicas
 
 **Backend**
 
-- Persistencia: los datos se guardan en MongoDB Atlas y se accede a ellos con Mongoose, usando un esquema con validaciones (`nombre` y `precio` obligatorios, `precio` y `stock` no negativos).
-- Seguridad de la configuración: la cadena de conexión vive en variables de entorno (`.env`) y no se sube al repositorio; se incluye un `.env.example` como guía.
+- Persistencia: los datos se guardan en MongoDB Atlas y se accede a ellos con Mongoose, con un esquema con validaciones (`nombre` y `precio` obligatorios, `precio` y `stock` no negativos).
+- Configuración segura: la cadena de conexión vive en variables de entorno y no se sube al repositorio; se incluye un `.env.example` como guía.
 - Middlewares:
-  - `cors`: habilita que el frontend consuma la API desde otro origen.
+  - `cors`: permite que el frontend consuma la API desde otro origen.
   - `logger.js`: registra en consola el método HTTP y la URL de cada request.
-  - `express.json()`: permite recibir datos JSON en el body de las peticiones POST y PUT.
+  - `express.json()`: permite recibir datos JSON en las peticiones POST y PUT.
   - `validarId`: rechaza con 400 los ids que no tienen formato válido de MongoDB.
-- Manejo de errores: respuestas 400 para validaciones y JSON inválido, 404 para recursos y rutas inexistentes, y un manejador centralizado para errores inesperados.
+- Errores: 400 para validaciones y JSON inválido, 404 para recursos y rutas inexistentes, y un manejador centralizado para errores inesperados.
 
 **Frontend**
 
-- Estado global (carrito, vista actual, producto seleccionado) centralizado en `App.jsx` y distribuido a los componentes hijos mediante props.
-- El catálogo obtiene los datos con `fetch` desde la API, manejando estados de carga y error.
-
-## 🛒 Funcionalidades Principales
-
-- Catálogo de productos obtenido dinámicamente desde la API propia, con persistencia en MongoDB.
-- API con CRUD completo de productos.
-- Carrito de compras con contador visible en el Navbar.
-- Formulario de contacto controlado con validación.
-- Buscador de productos conectado al listado.
+- Ruteo con React Router: cada pantalla es una ruta, y el detalle de producto lee el `id` de la URL con `useParams` y lo pide a la API.
+- Todas las llamadas a la API pasan por un único módulo (`src/api/`), que toma la dirección de `VITE_API_URL`, de modo que el mismo código funciona en local y en producción.
+- Estado del carrito centralizado en `App.jsx` y persistido en `localStorage`, para que sobreviva a recargas; el contador del Navbar se calcula a partir del carrito.
+- Las pantallas manejan los estados de carga y de error, y el detalle contempla el caso de producto inexistente.
 
 ## 👥 Integrantes del Equipo
 
