@@ -26,6 +26,7 @@ const loadCart = () => {
 function App() {
   const [cart, setCart] = useState(loadCart)
   const [cartOpen, setCartOpen] = useState(false)
+  const [toast, setToast] = useState(null)
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -37,6 +38,13 @@ function App() {
     window.scrollTo(0, 0)
   }, [pathname])
 
+  // El aviso del carrito se cierra solo a los 3,5 segundos
+  useEffect(() => {
+    if (!toast) return undefined
+    const timer = setTimeout(() => setToast(null), 3500)
+    return () => clearTimeout(timer)
+  }, [toast])
+
   const addToCart = (product) => {
     setCart((currentCart) => {
       const existingItem = currentCart.find((item) => item._id === product._id)
@@ -47,7 +55,7 @@ function App() {
       }
       return [...currentCart, { ...product, cantidad: 1 }]
     })
-    setCartOpen(true)
+    setToast({ id: Date.now(), nombre: product.nombre })
   }
 
   const changeQuantity = (productId, delta) => {
@@ -67,7 +75,15 @@ function App() {
     <div className="app">
       <Navbar
         cartCount={cartCount}
-        onCartClick={() => setCartOpen((isOpen) => !isOpen)}
+        onCartClick={() => {
+          setToast(null)
+          setCartOpen((isOpen) => !isOpen)
+        }}
+        toast={toast}
+        onViewCart={() => {
+          setToast(null)
+          setCartOpen(true)
+        }}
       />
 
       <main>

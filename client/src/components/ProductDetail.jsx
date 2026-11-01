@@ -72,16 +72,18 @@ function ProductDetail({ onAddToCart }) {
           <p className="product-detail__desc">
             {producto.stock > 0 ? `Stock disponible: ${producto.stock}` : 'Sin stock por el momento'}
           </p>
-          <button
-            type="button"
-            className="btn btn--primary"
-            onClick={() => onAddToCart(producto)}
-          >
-            Agregar al carrito
-          </button>
-          <Link to="/productos" className="btn btn--secondary">
-            Volver al listado
-          </Link>
+          <div className="product-detail__actions">
+  <button
+    type="button"
+    className="btn btn--primary"
+    onClick={() => onAddToCart(producto)}
+  >
+    Agregar al carrito
+  </button>
+  <Link to="/productos" className="btn btn--secondary">
+    Volver al listado
+  </Link>
+</div>
         </div>
       </div>
     </article>
